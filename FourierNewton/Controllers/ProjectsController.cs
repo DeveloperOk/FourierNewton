@@ -13,7 +13,13 @@ namespace FourierNewton.Controllers
 
         public IActionResult Info()
         {
-            return View();
+
+            var projectsInfoViewModel = new ProjectsInfoViewModel();
+            projectsInfoViewModel.ApplicationLocationUrl = ProjectConstants.ApplicationLocationUrl;
+            projectsInfoViewModel.ApplicationLocationFreeUrl = ProjectConstants.ApplicationLocationFreeUrl;
+
+            return View(projectsInfoViewModel);
+
         }
 
     }

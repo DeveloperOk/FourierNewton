@@ -1,7 +1,15 @@
-﻿@{
+﻿@model FourierNewton.Models.ProjectsInfoViewModel
+
+@{
     ViewData["Title"] = "Projects";
 }
 <h1>@ViewData["Title"]</h1>
 
-<a asp-area="" asp-controller="AntennaDesignAndImplementation" asp-action="Index">Antenna Design and Implementation</a>
+<a href="@Model.ApplicationLocationFreeUrl">Application Location Free</a>
+<div style="clear:both"></div>
 
+<a href="@Model.ApplicationLocationUrl">Application Location</a>
+<div style="clear:both"></div>
+
+<a asp-area="" asp-controller="AntennaDesignAndImplementation" asp-action="Index">Antenna Design and Implementation</a>
+<div style="clear:both"></div>
