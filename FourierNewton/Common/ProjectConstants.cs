@@ -7,6 +7,7 @@ namespace FourierNewton.Common
 {
     public class ProjectConstants
     {
-        public static string ProductionUrl = "http://0.0.0.0:8080";
+        public readonly static string ProductionUrl = "http://0.0.0.0:8080";
+        public readonly static string BaseUrl = "https://www.fouriernewton.com"; 
     }
 }

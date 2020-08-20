@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using FourierNewton.Models;
+using FourierNewton.Common;
 
 namespace FourierNewton.Controllers
 {
@@ -20,7 +21,12 @@ namespace FourierNewton.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var path = @"/projects/info";
+            var fullPath = ProjectConstants.BaseUrl + path;
+            var homeIndexViewModel = new HomeIndexViewModel();
+            homeIndexViewModel.FullPath = fullPath;
+
+            return View(homeIndexViewModel);
         }
 
         public IActionResult Privacy()
