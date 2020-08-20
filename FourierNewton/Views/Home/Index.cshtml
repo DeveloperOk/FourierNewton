@@ -1,10 +1,9 @@
-﻿@model FourierNewton.Models.HomeIndexViewModel
-
+﻿
 @{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="@Model.FullPath">our projects</a>.</p>
+    <p>Learn about <a asp-area="" asp-controller="Projects" asp-action="Info">our projects</a>.</p>
 </div>

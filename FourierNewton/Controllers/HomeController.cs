@@ -21,12 +21,7 @@ namespace FourierNewton.Controllers
 
         public IActionResult Index()
         {
-            var path = @"/projects/info";
-            var fullPath = ProjectConstants.BaseUrl + path;
-            var homeIndexViewModel = new HomeIndexViewModel();
-            homeIndexViewModel.FullPath = fullPath;
-
-            return View(homeIndexViewModel);
+            return View();
         }
 
         public IActionResult Privacy()
