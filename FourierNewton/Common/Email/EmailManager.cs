@@ -12,7 +12,7 @@ namespace FourierNewton.Common.Email
     public class EmailManager
     {
 
-        public static void SendEmail(string emailAddressTo) {
+        public static void SendEmail(string emailAddressTo, string password) {
 
 
             MailMessage mail = new MailMessage();
@@ -20,7 +20,7 @@ namespace FourierNewton.Common.Email
             mail.To.Add(emailAddressTo);
             mail.Subject = EmailConstants.EmailSubject;
             mail.SubjectEncoding = Encoding.UTF8;
-            mail.Body = generateEmailBody(emailAddressTo);
+            mail.Body = generateEmailBody(emailAddressTo, password);
             mail.BodyEncoding = Encoding.UTF8;
             mail.IsBodyHtml = true;
             //mail.Priority = MailPriority.High;
@@ -41,9 +41,7 @@ namespace FourierNewton.Common.Email
 
         }
 
-        private static string generateEmailBody(string emailAddressTo) {
-
-            string password = CryptographyManager.GeneratePassword();
+        private static string generateEmailBody(string emailAddressTo, string password) {
 
             string emailBody = "<h2>Welcome,</h2><br>" +
 
