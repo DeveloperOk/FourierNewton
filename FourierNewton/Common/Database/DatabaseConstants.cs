@@ -9,7 +9,7 @@ namespace FourierNewton.Common.Database
     {
 
         //Database is located in the folder of Databases which is located in the two folder above of BaseDirectory.  
-        private static string ConnectionStringTemplateOfDatabase202008261632 = @"Data Source=|BaseDirectory|..\..\Databases\Database202008261632.db;Version=3;";
+        private static string ConnectionStringTemplateOfDatabase202008261632 = @"Data Source=|BaseDirectory|../../Databases/Database202008261632.db;Version=3;";
         public readonly static string ConnectionStringOfDatabase202008261632 =
             ConnectionStringTemplateOfDatabase202008261632.Replace("|BaseDirectory|", AppDomain.CurrentDomain.BaseDirectory);
 
