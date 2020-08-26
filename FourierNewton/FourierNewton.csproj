@@ -1,7 +1,16 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.35" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.113.1" />
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy /y/i &quot;$(SolutionDir)FourierNewton\Databases\Database202008261632.db&quot; &quot;$(SolutionDir)FourierNewton\bin\Databases\&quot;" />
+  </Target>
 
 </Project>
