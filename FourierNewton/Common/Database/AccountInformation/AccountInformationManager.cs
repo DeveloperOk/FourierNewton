@@ -87,5 +87,27 @@ namespace FourierNewton.Common.Database.AccountInformation
 
         }
 
+        public static List<AccountInformation> GetDataWithGivenEmail(string email)
+        {
+
+            List<AccountInformation> listOfAccountInformation;
+
+            string connectionString = DatabaseConstants.ConnectionStringOfDatabase202008261632;
+
+            using (IDbConnection iDbConnection = new SQLiteConnection(connectionString))
+            {
+
+                string query = "select * from AccountInformation where Email = @Email";
+                var dynamicParameters = new DynamicParameters();
+                dynamicParameters.Add("@Email", email);
+                var output = iDbConnection.Query<AccountInformation>(query, dynamicParameters);
+                listOfAccountInformation = output.ToList();
+
+            }
+
+            return listOfAccountInformation;
+        }
+
+
     }
 }
