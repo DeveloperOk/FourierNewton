@@ -12,15 +12,15 @@ namespace FourierNewton.Common.Email
     public class EmailManager
     {
 
-        public static void SendEmail(string emailAddressTo, string password) {
+        private static void SendEmail(string emailAddressTo, string emailSubject, string emailBody) {
 
 
             MailMessage mail = new MailMessage();
             mail.From = new MailAddress(EmailConstants.EmailAddressFrom, EmailConstants.DispLayName, Encoding.UTF8);
             mail.To.Add(emailAddressTo);
-            mail.Subject = EmailConstants.EmailSubject;
+            mail.Subject = emailSubject;
             mail.SubjectEncoding = Encoding.UTF8;
-            mail.Body = generateEmailBody(emailAddressTo, password);
+            mail.Body = emailBody;
             mail.BodyEncoding = Encoding.UTF8;
             mail.IsBodyHtml = true;
             //mail.Priority = MailPriority.High;
@@ -41,7 +41,16 @@ namespace FourierNewton.Common.Email
 
         }
 
-        private static string generateEmailBody(string emailAddressTo, string password) {
+        public static void SendEmailForAccountGeneration(string emailAddressTo, string password)
+        {
+
+            string emailBody = generateEmailBodyForAccountGeneration(emailAddressTo, password);
+            SendEmail(emailAddressTo, EmailConstants.EmailSubjectForAccountGeneration, emailBody);
+
+        }
+
+
+        private static string generateEmailBodyForAccountGeneration(string emailAddressTo, string password) {
 
             string emailBody = "<h2>Welcome,</h2><br>" +
 
@@ -56,6 +65,33 @@ namespace FourierNewton.Common.Email
             return emailBody;
 
         }
+
+        public static void SendEmailForResettingPassword(string emailAddressTo, string password)
+        {
+
+            string emailBody = generateEmailBodyForResettingPassword(emailAddressTo, password);
+            SendEmail(emailAddressTo, EmailConstants.EmailSubjectForResettingPassword, emailBody);
+
+        }
+
+        private static string generateEmailBodyForResettingPassword(string emailAddressTo, string password)
+        {
+
+            string emailBody = "<h2>Password is reset,</h2><br>" +
+
+                               "<h3>&nbsp;&nbsp;&nbsp;&nbsp;Username: " + emailAddressTo + "</h3><br>" +
+
+                               "<h3>&nbsp;&nbsp;&nbsp;&nbsp;Password: " + password + "</h3><br>" +
+
+                               "<h2>Thank you</h2><br>" +
+
+                               "<a href =" + ProjectConstants.BaseUrl + ">" + ProjectConstants.BaseUrl + "</a>";
+
+            return emailBody;
+
+        }
+
+
 
     }
 }

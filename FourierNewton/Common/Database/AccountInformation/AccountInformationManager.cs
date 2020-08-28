@@ -69,5 +69,23 @@ namespace FourierNewton.Common.Database.AccountInformation
 
         }
 
+        public static void UpdatePassword(AccountInformation accountInformation)
+        {
+
+            string connectionString = DatabaseConstants.ConnectionStringOfDatabase202008261632;
+
+            using (IDbConnection iDbConnection = new SQLiteConnection(connectionString))
+            {
+
+                string query = "update AccountInformation set Password = @Password where Email = @Email";
+                var dynamicParameters = new DynamicParameters();
+                dynamicParameters.Add("@Email", accountInformation.Email);
+                dynamicParameters.Add("@Password", accountInformation.Password);
+                iDbConnection.Execute(query, dynamicParameters);
+
+            }
+
+        }
+
     }
 }

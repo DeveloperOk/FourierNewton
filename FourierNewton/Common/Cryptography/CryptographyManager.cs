@@ -36,7 +36,7 @@ namespace FourierNewton.Common.Cryptography
 
             password = ShufflePassword(password);
 
-            return password;
+            return password.Trim();
         }
 
         private static string GeneratePartOfPassword(int length, string valid)

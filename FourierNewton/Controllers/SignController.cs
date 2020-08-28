@@ -67,11 +67,76 @@ namespace FourierNewton.Controllers
 
                 AccountInformationManager.InsertData(accountInformation);
 
-                EmailManager.SendEmail(email.Trim(), password);
+                EmailManager.SendEmailForAccountGeneration(email.Trim(), password);
             }
 
             return view;
         }
+
+        public IActionResult ResetPassword()
+        {
+            ResetPasswordViewModel resetPasswordViewModel = new ResetPasswordViewModel();
+            resetPasswordViewModel.IsError = false;
+
+            return View(resetPasswordViewModel);
+        }
+
+        public IActionResult ResetPasswordProcess(string email)
+        {
+
+            ViewResult view;
+
+            if (string.IsNullOrEmpty(email) == true)
+            {
+
+                ResetPasswordViewModel resetPasswordViewModel = new ResetPasswordViewModel();
+                resetPasswordViewModel.IsError = true;
+                resetPasswordViewModel.ErrorMessage = SignConstants.EmailIsEmptyOrNullMessage;
+
+                view = View("/Views/Sign/ResetPassword.cshtml", resetPasswordViewModel);
+
+            }
+            else if (string.IsNullOrEmpty(email.Trim()) == true)
+            {
+
+                ResetPasswordViewModel resetPasswordViewModel = new ResetPasswordViewModel();
+                resetPasswordViewModel.IsError = true;
+                resetPasswordViewModel.ErrorMessage = SignConstants.EmailIsEmptyOrNullMessage;
+
+                view = View("/Views/Sign/ResetPassword.cshtml", resetPasswordViewModel);
+
+            }
+            else if (AccountInformationManager.IsThereAnyRecordWithGivenEmail(email.Trim()) == false)
+            {
+
+                ResetPasswordViewModel resetPasswordViewModel = new ResetPasswordViewModel();
+                resetPasswordViewModel.IsError = true;
+                resetPasswordViewModel.ErrorMessage = SignConstants.EmailDoesNotExistMessage;
+
+                view = View("/Views/Sign/ResetPassword.cshtml", resetPasswordViewModel);
+
+            }
+            else
+            {
+
+                view = View("/Views/Sign/ResetPasswordProcess.cshtml");
+
+                string password = CryptographyManager.GeneratePassword().Trim();
+                string encryptedPassword = CryptographyManager.EncryptStringWithAes(password);
+
+                var accountInformation = new AccountInformation();
+                accountInformation.Email = email.Trim();
+                accountInformation.Password = encryptedPassword;
+                accountInformation.Date = DateFN.GetCurrentDate();
+
+                AccountInformationManager.UpdatePassword(accountInformation);
+
+                EmailManager.SendEmailForResettingPassword(email.Trim(), password);
+            }
+
+            return view;
+        }
+
 
 
     }
