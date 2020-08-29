@@ -1,0 +1,38 @@
+﻿
+<script src="~/js/Sign/SignIn.js"></script>
+
+@model FourierNewton.Models.Sign.SignInViewModel
+
+@{
+    ViewData["Title"] = "Sign in";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form action="/Sign/SignInProcess" method="post" oninput="removeErrorMessage()">
+    <table style="width:100%">
+        <tr>
+            <td><label for="email">Email: </label></td>
+            <td><input type="email" id="email" size="40" name="email" value="" required></td>
+        </tr>
+        <tr>
+            <td><label for="password">Password: </label></td>
+            <td><input type="password" id="password" size="40" name="password" minlength="8" value="" required></td>
+        </tr>
+        <tr>
+            <td><input type="submit" value="Sign in"></td>
+            <td><p></p></td>
+        </tr>
+    </table>
+</form>
+
+<br>
+<p>Do not have account? <a asp-area="" asp-controller="Sign" asp-action="SignUp">Generate account</a>.</p>
+<p>Do not remember password? <a asp-area="" asp-controller="Sign" asp-action="ResetPassword">Reset password</a>.</p>
+<p>Would you like to <a asp-area="" asp-controller="Sign" asp-action="ChangePassword">change password</a>?</p>
+
+
+@if (Model.IsError)
+{
+    <pre id="errorMessageParagraph" style="color:rgba(255,0,0,1.0);">@Model.ErrorMessage</pre>
+}

@@ -181,7 +181,7 @@ namespace FourierNewton.Controllers
 
             }
 
-            
+
             if (string.IsNullOrEmpty(currentPassword) == true)
             {
 
@@ -195,7 +195,7 @@ namespace FourierNewton.Controllers
                 changePasswordViewModel.IsError = true;
                 changePasswordViewModel.ErrorMessage += SignConstants.CurrentPasswordCanNotBeNullOrEmpty + SignConstants.Newline;
             }
-            else if(string.IsNullOrEmpty(email) == false){
+            else if (string.IsNullOrEmpty(email) == false) {
 
                 if (isCurrentPasswordCorrect(currentPassword.Trim(), email.Trim()) == false)
                 {
@@ -228,7 +228,7 @@ namespace FourierNewton.Controllers
 
             ViewResult view;
 
-            if (changePasswordViewModel.IsError == true) { 
+            if (changePasswordViewModel.IsError == true) {
 
                 view = View("/Views/Sign/ChangePassword.cshtml", changePasswordViewModel);
 
@@ -253,6 +253,112 @@ namespace FourierNewton.Controllers
             return view;
         }
 
+        public IActionResult SignIn()
+        {
+            SignInViewModel signInViewModel = new SignInViewModel();
+            signInViewModel.IsError = false;
+
+            return View(signInViewModel);
+        }
+
+        public IActionResult SignInProcess(string email, string password)
+        {
+
+            SignInViewModel signInViewModel = new SignInViewModel();
+            signInViewModel.IsError = false;
+            signInViewModel.ErrorMessage = "";
+
+            if (string.IsNullOrEmpty(email) == true)
+            {
+
+                signInViewModel.IsError = true;
+                signInViewModel.ErrorMessage += SignConstants.EmailIsEmptyOrNullMessage + SignConstants.Newline;
+
+            }
+            else if (string.IsNullOrEmpty(email.Trim()) == true)
+            {
+
+                signInViewModel.IsError = true;
+                signInViewModel.ErrorMessage += SignConstants.EmailIsEmptyOrNullMessage + SignConstants.Newline;
+
+            }
+            else if (AccountInformationManager.IsThereAnyRecordWithGivenEmail(email.Trim()) == false)
+            {
+
+                signInViewModel.IsError = true;
+                signInViewModel.ErrorMessage += SignConstants.EmailDoesNotExistMessage + SignConstants.Newline;
+
+            }
+
+
+            if (string.IsNullOrEmpty(password) == true)
+            {
+
+                signInViewModel.IsError = true;
+                signInViewModel.ErrorMessage += SignConstants.PasswordCanNotBeNullOrEmpty + SignConstants.Newline;
+
+            }
+            else if (string.IsNullOrEmpty(password.Trim()) == true)
+            {
+
+                signInViewModel.IsError = true;
+                signInViewModel.ErrorMessage += SignConstants.PasswordCanNotBeNullOrEmpty + SignConstants.Newline;
+            }
+            else if (string.IsNullOrEmpty(email) == false)
+            {
+
+                if (isCurrentPasswordCorrect(password.Trim(), email.Trim()) == false)
+                {
+
+                    signInViewModel.IsError = true;
+                    signInViewModel.ErrorMessage += SignConstants.PasswordIsNotCorrect + SignConstants.Newline;
+
+                }
+
+            }
+
+
+            ViewResult view;
+
+            if (signInViewModel.IsError == true)
+            {
+
+                view = View("/Views/Sign/SignIn.cshtml", signInViewModel);
+
+            }
+            else
+            {
+
+                view = View("/Views/Sign/SignInProcess.cshtml");
+
+                if (isCurrentPasswordCorrect(password.Trim(), email.Trim()) == false)
+                {
+
+                    carryOutSigningIn();
+
+                }
+
+            }
+
+            return view;
+        }
+
+        public IActionResult SignOut()
+        {
+
+            carryOutSigningOut();
+
+            return View();
+        }
+
+        private void carryOutSigningIn(){
+
+        }
+
+        private void carryOutSigningOut()
+        {
+
+        }
 
         private bool isCurrentPasswordCorrect(string currentPassword, string email) {
 
