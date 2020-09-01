@@ -1,13 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using FourierNewton.Common.Auth;
 using FourierNewton.Common.Cryptography;
 using FourierNewton.Common.Database.AccountInformation;
 using FourierNewton.Common.DateFN;
 using FourierNewton.Common.Email;
 using FourierNewton.Common.Sign;
 using FourierNewton.Models.Sign;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.OAuth;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FourierNewton.Controllers
@@ -255,10 +261,72 @@ namespace FourierNewton.Controllers
 
         public IActionResult SignIn()
         {
-            SignInViewModel signInViewModel = new SignInViewModel();
-            signInViewModel.IsError = false;
 
-            return View(signInViewModel);
+            var authenticatedFlag = false;
+
+            if (User != null) {
+                if (User.Identity != null) {
+
+                    authenticatedFlag = User.Identity.IsAuthenticated;
+                }
+            }
+
+
+            ViewResult view;
+
+            if (authenticatedFlag == false)
+            {
+
+                SignInViewModel signInViewModel = new SignInViewModel();
+                signInViewModel.IsError = false;
+
+                view = View("/Views/Sign/SignIn.cshtml", signInViewModel);
+
+            }
+            else
+            {
+
+                var email = getEmailFromUserObject();
+
+                SignInInformationViewModel signInInformationViewModel = new SignInInformationViewModel();
+                signInInformationViewModel.IsError = false;
+                signInInformationViewModel.Email = email;
+
+                view = View("/Views/Sign/SignInInformation.cshtml", signInInformationViewModel);
+
+            }
+        
+
+            return view;
+
+        }
+
+        private string getEmailFromUserObject() {
+
+            var email = string.Empty;
+            if (User != null)
+            {
+                if (User.Claims != null)
+                {
+                    foreach (var claim in User.Claims)
+                    {
+
+                        if (claim != null)
+                        {
+
+                            if (string.Equals(claim.Type, ClaimTypes.Email))
+                            {
+                                email = claim.Value;
+                                break;
+                            }
+
+                        }
+                    }
+                }
+            }
+
+            return email;
+
         }
 
         public IActionResult SignInProcess(string email, string password)
@@ -329,20 +397,22 @@ namespace FourierNewton.Controllers
             else
             {
 
-                view = View("/Views/Sign/SignInProcess.cshtml");
 
-                if (isCurrentPasswordCorrect(password.Trim(), email.Trim()) == false)
+                if (isCurrentPasswordCorrect(password.Trim(), email.Trim()) == true)
                 {
 
-                    carryOutSigningIn();
-
+                    carryOutSigningIn(email.Trim());
+                    
                 }
+
+                view = View("/Views/Sign/SignInProcess.cshtml");
 
             }
 
             return view;
         }
 
+        [Authorize]
         public IActionResult SignOut()
         {
 
@@ -351,13 +421,25 @@ namespace FourierNewton.Controllers
             return View();
         }
 
-        private void carryOutSigningIn(){
+        private async void carryOutSigningIn(string email){
+
+            var fourierNewtonClaims = new List<Claim>() { 
+            
+                new Claim(ClaimTypes.Email, email)    
+                
+            };
+
+            var fourierNewtonIdentity = new ClaimsIdentity(fourierNewtonClaims, AuthConstants.FourierNewtonIdentity);
+
+            var userPrincipal = new ClaimsPrincipal(new[] { fourierNewtonIdentity });
+
+            await HttpContext.SignInAsync(AuthConstants.AuthScheme, userPrincipal);
 
         }
 
-        private void carryOutSigningOut()
+        private async void carryOutSigningOut()
         {
-
+            await HttpContext.SignOutAsync(AuthConstants.AuthScheme);
         }
 
         private bool isCurrentPasswordCorrect(string currentPassword, string email) {

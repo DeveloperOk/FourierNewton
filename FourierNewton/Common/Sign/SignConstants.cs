@@ -25,6 +25,6 @@ namespace FourierNewton.Common.Sign
         public static readonly string PasswordIsNotCorrect = "Password is not correct.";
         public static readonly string PasswordCanNotBeNullOrEmpty = "Password can't be null or empty.";
 
-
+      
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FourierNewton.Common.Auth;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -22,6 +23,17 @@ namespace FourierNewton
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.AddAuthentication(AuthConstants.AuthScheme)
+                .AddCookie(AuthConstants.AuthScheme, config =>
+                {
+
+                    config.Cookie.Name = AuthConstants.CookieName;
+                    config.LoginPath = AuthConstants.LoginPath;
+
+                });
+                
+
             services.AddControllersWithViews();
         }
 
@@ -39,6 +51,8 @@ namespace FourierNewton
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

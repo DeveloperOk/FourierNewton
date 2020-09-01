@@ -1,0 +1,13 @@
+﻿
+@model FourierNewton.Models.Sign.SignInInformationViewModel
+
+@{
+    ViewData["Title"] = "Sign in Information";
+}
+
+<h1>@ViewData["Title"]</h1>
+<br>
+
+<h3>Hello @Model.Email</h3>
+
+<a asp-area="" asp-controller="Sign" asp-action="SignOut">Sign out</a>
